@@ -7,6 +7,7 @@ use App\Models\OrderModel;
 use App\Models\OrderItemModel;
 use App\Models\TableModel;
 use App\Models\MenuModel;
+use App\Libraries\WebSocketClient;
 
 class Orders extends BaseController
 {
@@ -38,6 +39,10 @@ class Orders extends BaseController
         ];
         
         $orderId = $orderModel->insert($data);
+        
+        // Send real-time notification
+        $wsClient = new WebSocketClient();
+        $wsClient->notifyNewOrder($orderId, $data);
         
         // Placeholder for order creation logic
         // In a real app, this would handle adding items to an order
