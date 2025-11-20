@@ -15,6 +15,6 @@ class Dashboard extends BaseController
             'active_menu' => 'dashboard'
         ];
         
-        return view('admin/dashboard_new', $data);
+        return view('admin/dashboard', $data);
     }
 }

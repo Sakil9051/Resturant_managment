@@ -24,7 +24,7 @@ class Staff extends BaseController
         $data['page_subtitle'] = 'Manage users and access roles';
         $data['active_menu'] = 'staff';
         
-        return view('admin/staff_new', $data);
+        return view('admin/staff', $data);
     }
 
     public function add()
