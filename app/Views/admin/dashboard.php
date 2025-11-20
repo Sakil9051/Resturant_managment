@@ -86,10 +86,7 @@
                         <p class="text-sm text-gray-500 mt-1">Welcome back, Admin! Here's what's happening today.</p>
                     </div>
                     <div class="flex items-center space-x-4">
-                        <button class="relative p-2 text-gray-400 hover:text-gray-600 transition-colors">
-                            <i class="fas fa-bell text-xl"></i>
-                            <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-                        </button>
+                        <div id="notification-bell"></div>
                         <div class="flex items-center space-x-3 border-l pl-4">
                             <div class="w-10 h-10 rounded-full gradient-bg flex items-center justify-center text-white font-semibold">
                                 A
@@ -260,6 +257,10 @@
             </main>
         </div>
     </div>
+
+    <!-- WebSocket Real-time Notifications -->
+    <script src="<?= base_url('js/notifications.js') ?>"></script>
+    <?php include(APPPATH . 'Views/Admin/includes/websocket_integration.php'); ?>
 
 </body>
 </html>
