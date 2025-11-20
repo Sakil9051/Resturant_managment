@@ -1,68 +1,343 @@
-# CodeIgniter 4 Application Starter
+# 🍽️ Restaurant Management System
 
-## What is CodeIgniter?
+A comprehensive web-based restaurant management system built with CodeIgniter 4, featuring real-time order tracking, inventory management, reservation system, and advanced analytics.
 
-CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
-More information can be found at the [official site](https://codeigniter.com).
+![PHP](https://img.shields.io/badge/PHP-8.1+-blue)
+![CodeIgniter](https://img.shields.io/badge/CodeIgniter-4.x-red)
+![MySQL](https://img.shields.io/badge/MySQL-8.0+-orange)
+![License](https://img.shields.io/badge/license-MIT-green)
 
-This repository holds a composer-installable app starter.
-It has been built from the
-[development repository](https://github.com/codeigniter4/CodeIgniter4).
+## 📋 Table of Contents
 
-More information about the plans for version 4 can be found in [CodeIgniter 4](https://forum.codeigniter.com/forumdisplay.php?fid=28) on the forums.
+- [Features](#features)
+- [Screenshots](#screenshots)
+- [Tech Stack](#tech-stack)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Usage](#usage)
+- [API Documentation](#api-documentation)
+- [Testing](#testing)
+- [Deployment](#deployment)
+- [Contributing](#contributing)
+- [License](#license)
 
-You can read the [user guide](https://codeigniter.com/user_guide/)
-corresponding to the latest version of the framework.
+## ✨ Features
 
-## Installation & updates
+### Admin Dashboard
+- **Real-time Analytics** - Live sales, orders, and reservation metrics
+- **Interactive Floor Map** - Drag-and-drop table management with localStorage persistence
+- **Advanced Reports** - Date-filtered reports with CSV/PDF export
+- **Kitchen Display System (KDS)** - Real-time order tracking for kitchen staff
 
-`composer create-project codeigniter4/appstarter` then `composer update` whenever
-there is a new release of the framework.
+### Core Modules
+- 📊 **Dashboard** - Comprehensive business overview with charts and KPIs
+- 🍽️ **Menu Management** - CRUD operations for menu items with categories
+- 🎂 **Buffet Packages** - Manage buffet offerings and pricing
+- 📅 **Reservations** - Table booking system with status tracking
+- 🛒 **Order Management** - Complete order lifecycle management
+- 📦 **Inventory** - Stock tracking with low-stock alerts
+- 👥 **Staff Management** - Employee records and role management
+- 🪑 **Table Management** - Visual floor plan with real-time status
+- 📈 **Reports & Analytics** - Advanced filtering, search, and export capabilities
 
-When updating, check the release notes to see if there are any changes you might need to apply
-to your `app` folder. The affected files can be copied or merged from
-`vendor/codeigniter4/framework/app`.
+### Key Highlights
+- ✅ Responsive design with Tailwind CSS
+- ✅ Real-time data visualization with Chart.js
+- ✅ Custom delete confirmation modals
+- ✅ Flash message feedback system
+- ✅ Date range filtering and search
+- ✅ Export to CSV, PDF, and Print
+- ✅ Interactive drag-and-drop interfaces
+- ✅ Low stock inventory alerts
 
-## Setup
+## 📸 Screenshots
 
-Copy `env` to `.env` and tailor for your app, specifically the baseURL
-and any database settings.
+### Admin Dashboard
+![Dashboard](docs/screenshots/dashboard.png)
 
-## Important Change with index.php
+### Live Floor Map
+![Floor Map](docs/screenshots/floor-map.png)
 
-`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
-for better security and separation of components.
+### Reports & Analytics
+![Reports](docs/screenshots/reports.png)
 
-This means that you should configure your web server to "point" to your project's *public* folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
-framework are exposed.
+## 🛠️ Tech Stack
 
-**Please** read the user guide for a better explanation of how CI4 works!
+**Backend:**
+- PHP 8.1+
+- CodeIgniter 4.x
+- MySQL 8.0+
 
-## Repository Management
+**Frontend:**
+- HTML5 / CSS3
+- JavaScript (ES6+)
+- Tailwind CSS
+- Chart.js
+- Font Awesome
 
-We use GitHub issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
-We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
-FEATURE REQUESTS.
+**Development Tools:**
+- Composer
+- Git
+- XAMPP / LAMP / WAMP
 
-This repository is a "distribution" one, built by our release preparation script.
-Problems with it can be raised on our forum, or as issues in the main repository.
+## 📦 Installation
 
-## Server Requirements
+### Prerequisites
+- PHP >= 8.1
+- MySQL >= 8.0
+- Composer
+- Web server (Apache/Nginx)
 
-PHP version 8.1 or higher is required, with the following extensions installed:
+### Step-by-Step Setup
 
-- [intl](http://php.net/manual/en/intl.requirements.php)
-- [mbstring](http://php.net/manual/en/mbstring.installation.php)
+1. **Clone the repository**
+```bash
+git clone git@github.com:Sakil9051/Resturant_managment.git
+cd Resturant_managment
+```
 
-> [!WARNING]
-> - The end of life date for PHP 7.4 was November 28, 2022.
-> - The end of life date for PHP 8.0 was November 26, 2023.
-> - If you are still using PHP 7.4 or 8.0, you should upgrade immediately.
-> - The end of life date for PHP 8.1 will be December 31, 2025.
+2. **Install dependencies**
+```bash
+composer install
+```
 
-Additionally, make sure that the following extensions are enabled in your PHP:
+3. **Environment configuration**
+```bash
+cp env .env
+```
 
-- json (enabled by default - don't turn it off)
-- [mysqlnd](http://php.net/manual/en/mysqlnd.install.php) if you plan to use MySQL
-- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
+4. **Configure database**
+Edit `.env` file:
+```env
+database.default.hostname = localhost
+database.default.database = restaurant_db
+database.default.username = your_username
+database.default.password = your_password
+database.default.DBDriver = MySQLi
+```
+
+5. **Run migrations**
+```bash
+php spark migrate
+```
+
+6. **Seed database (optional)**
+```bash
+php spark db:seed DatabaseSeeder
+```
+
+7. **Start development server**
+```bash
+php spark serve
+```
+
+8. **Access the application**
+```
+http://localhost:8080
+```
+
+### Default Credentials
+- **Admin:** admin@restaurant.com / admin123
+- **Staff:** staff@restaurant.com / staff123
+
+## ⚙️ Configuration
+
+### Base URL
+Update `app/Config/App.php`:
+```php
+public string $baseURL = 'http://localhost:8080/';
+```
+
+### Database
+Configure in `.env` or `app/Config/Database.php`
+
+### Email Settings
+For reservation confirmations, configure SMTP in `.env`:
+```env
+email.protocol = smtp
+email.SMTPHost = smtp.gmail.com
+email.SMTPUser = your-email@gmail.com
+email.SMTPPass = your-app-password
+email.SMTPPort = 587
+```
+
+## 🚀 Usage
+
+### Admin Panel
+Access: `http://localhost:8080/admin/dashboard`
+
+**Key Features:**
+- View real-time statistics
+- Manage menu items and categories
+- Process orders and reservations
+- Track inventory levels
+- Generate reports with custom date ranges
+- Export data to CSV/PDF
+
+### Kitchen Display System (KDS)
+Access: `http://localhost:8080/admin/kds`
+
+**Features:**
+- Real-time order updates
+- Order status management (Pending → Preparing → Ready)
+- Visual order cards with item details
+
+### Reports
+Access: `http://localhost:8080/admin/reports`
+
+**Capabilities:**
+- Date range filtering
+- Search by order ID or customer
+- Export to CSV, PDF, or Print
+- Multiple report types (Sales, Inventory, Staff)
+- Interactive charts and visualizations
+
+## 📚 API Documentation
+
+### Orders API
+```php
+// Get all orders
+GET /api/orders
+
+// Get order by ID
+GET /api/orders/{id}
+
+// Create order
+POST /api/orders
+Body: {
+  "table_id": 1,
+  "type": "Dine-in",
+  "items": [...],
+  "total": 150.00
+}
+
+// Update order status
+PUT /api/orders/{id}/status
+Body: { "status": "Completed" }
+```
+
+### Reservations API
+```php
+// Create reservation
+POST /api/reservations
+Body: {
+  "name": "John Doe",
+  "email": "john@example.com",
+  "phone": "1234567890",
+  "guests": 4,
+  "date": "2025-11-25",
+  "time": "19:00"
+}
+```
+
+## 🧪 Testing
+
+### Run PHPUnit Tests
+```bash
+composer test
+```
+
+### Run specific test suite
+```bash
+./vendor/bin/phpunit tests/unit/
+```
+
+### Code Coverage
+```bash
+composer test:coverage
+```
+
+## 🚢 Deployment
+
+### Production Checklist
+- [ ] Set `CI_ENVIRONMENT = production` in `.env`
+- [ ] Enable CSRF protection
+- [ ] Configure secure database credentials
+- [ ] Set up SSL certificate
+- [ ] Configure backup strategy
+- [ ] Enable error logging
+- [ ] Optimize autoloader
+- [ ] Set proper file permissions
+
+### Apache Configuration
+```apache
+<VirtualHost *:80>
+    ServerName restaurant.example.com
+    DocumentRoot /var/www/restaurant/public
+    
+    <Directory /var/www/restaurant/public>
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
+```
+
+### Nginx Configuration
+```nginx
+server {
+    listen 80;
+    server_name restaurant.example.com;
+    root /var/www/restaurant/public;
+    index index.php;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ \.php$ {
+        fastcgi_pass unix:/var/run/php/php8.1-fpm.sock;
+        fastcgi_index index.php;
+        include fastcgi_params;
+    }
+}
+```
+
+## 🤝 Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+### Coding Standards
+- Follow PSR-12 coding standards
+- Write meaningful commit messages
+- Add tests for new features
+- Update documentation as needed
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 👥 Authors
+
+- **Sakil** - *Initial work* - [Sakil9051](https://github.com/Sakil9051)
+
+## 🙏 Acknowledgments
+
+- CodeIgniter Framework
+- Tailwind CSS
+- Chart.js
+- Font Awesome
+- All contributors and testers
+
+## 📞 Support
+
+For support, email sakil@example.com or open an issue on GitHub.
+
+## 🗺️ Roadmap
+
+- [ ] Mobile app (React Native)
+- [ ] Online ordering system
+- [ ] Payment gateway integration
+- [ ] Multi-language support
+- [ ] Customer loyalty program
+- [ ] Advanced analytics with AI insights
+- [ ] Real-time notifications (WebSockets)
+
+---
+
+**Made with ❤️ by Sakil**

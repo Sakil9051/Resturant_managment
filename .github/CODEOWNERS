@@ -1,0 +1,24 @@
+# Default owners for everything in the repo
+*       @Sakil9051
+
+# Controllers
+/app/Controllers/    @Sakil9051
+
+# Models
+/app/Models/         @Sakil9051
+
+# Views
+/app/Views/          @Sakil9051
+
+# Configuration
+/app/Config/         @Sakil9051
+
+# GitHub workflows and configuration
+/.github/            @Sakil9051
+
+# Documentation
+/docs/               @Sakil9051
+README.md            @Sakil9051
+
+# Database migrations
+/app/Database/       @Sakil9051
