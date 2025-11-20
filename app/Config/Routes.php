@@ -57,6 +57,13 @@ $routes->group('admin', ['filter' => 'auth'], function($routes) {
     $routes->post('buffet/update/(:num)', 'Admin\BuffetController::update/$1');
     $routes->get('buffet/delete/(:num)', 'Admin\BuffetController::delete/$1');
     
+    // Staff
+    $routes->get('staff', 'Admin\Staff::index');
+    $routes->post('staff/add', 'Admin\Staff::add');
+    $routes->get('staff/edit/(:num)', 'Admin\Staff::edit/$1');
+    $routes->post('staff/update/(:num)', 'Admin\Staff::update/$1');
+    $routes->get('staff/delete/(:num)', 'Admin\Staff::delete/$1');
+    
     // Orders
     $routes->get('orders', 'Admin\Orders::index');
     $routes->post('orders/create', 'Admin\Orders::create');
@@ -65,6 +72,7 @@ $routes->group('admin', ['filter' => 'auth'], function($routes) {
     // KDS
     $routes->get('kds', 'Admin\KDS::index');
     $routes->get('kds/update/(:num)/(:segment)', 'Admin\KDS::update/$1/$2');
+    $routes->post('kds/update-status/(:num)', 'Admin\KDS::updateStatus/$1');
     
     // Inventory
     $routes->get('inventory', 'Admin\Inventory::index');
@@ -73,13 +81,15 @@ $routes->group('admin', ['filter' => 'auth'], function($routes) {
     $routes->post('inventory/update/(:num)', 'Admin\Inventory::update/$1');
     $routes->get('inventory/delete/(:num)', 'Admin\Inventory::delete/$1');
     
-    // Staff
-    $routes->get('staff', 'Admin\Staff::index');
-    $routes->post('staff/add', 'Admin\Staff::add');
-    $routes->get('staff/edit/(:num)', 'Admin\Staff::edit/$1');
-    $routes->post('staff/update/(:num)', 'Admin\Staff::update/$1');
-    $routes->get('staff/delete/(:num)', 'Admin\Staff::delete/$1');
-    
     // Reports
     $routes->get('reports', 'Admin\Reports::index');
+    $routes->post('reports/export', 'Admin\Reports::export');
+    
+    // Notifications
+    $routes->get('notifications', 'Admin\Notifications::index');
+    $routes->get('notifications/recent', 'Admin\Notifications::recent');
+    $routes->post('notifications/create', 'Admin\Notifications::create');
+    $routes->post('notifications/mark-read/(:num)', 'Admin\Notifications::markRead/$1');
+    $routes->post('notifications/mark-all-read', 'Admin\Notifications::markAllRead');
+    $routes->get('notifications/delete/(:num)', 'Admin\Notifications::delete/$1');
 });
