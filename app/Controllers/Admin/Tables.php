@@ -11,6 +11,13 @@ class Tables extends BaseController
     {
         $model = new TableModel();
         $data['tables'] = $model->findAll();
+        
+        // Layout variables
+        $data['title'] = 'Tables';
+        $data['page_title'] = 'Table Management';
+        $data['page_subtitle'] = 'Manage restaurant tables and seating';
+        $data['active_menu'] = 'tables';
+        
         return view('admin/tables', $data);
     }
 

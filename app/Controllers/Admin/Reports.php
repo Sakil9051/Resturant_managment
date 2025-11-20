@@ -100,6 +100,12 @@ class Reports extends BaseController
         $data['report_type'] = $reportType;
         $data['search'] = $search;
 
+        // Layout variables
+        $data['title'] = 'Reports';
+        $data['page_title'] = 'Reports & Analytics';
+        $data['page_subtitle'] = 'View business insights and statistics';
+        $data['active_menu'] = 'reports';
+
         return view('admin/reports', $data);
     }
 

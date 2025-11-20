@@ -16,6 +16,12 @@ class Reservations extends BaseController
         $tableModel = new TableModel();
         $data['tables'] = $tableModel->where('status', 'Available')->findAll();
         
+        // Layout variables
+        $data['title'] = 'Reservations';
+        $data['page_title'] = 'Reservations';
+        $data['page_subtitle'] = 'Manage customer reservations';
+        $data['active_menu'] = 'reservations';
+        
         return view('admin/reservations', $data);
     }
 

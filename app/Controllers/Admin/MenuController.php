@@ -16,6 +16,12 @@ class MenuController extends BaseController
         $catModel = new MenuCategoryModel();
         $data['categories'] = $catModel->findAll();
         
+        // Layout variables
+        $data['title'] = 'Menu Management';
+        $data['page_title'] = 'Menu Management';
+        $data['page_subtitle'] = 'Manage restaurant menu items';
+        $data['active_menu'] = 'menu';
+        
         return view('admin/menu', $data);
     }
 

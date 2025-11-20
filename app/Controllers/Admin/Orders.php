@@ -21,6 +21,12 @@ class Orders extends BaseController
         $menuModel = new MenuModel();
         $data['menuItems'] = $menuModel->where('available', 1)->findAll();
         
+        // Layout variables
+        $data['title'] = 'Orders';
+        $data['page_title'] = 'Orders Management';
+        $data['page_subtitle'] = 'View and manage customer orders';
+        $data['active_menu'] = 'orders';
+        
         return view('admin/orders', $data);
     }
 

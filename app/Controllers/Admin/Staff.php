@@ -18,7 +18,13 @@ class Staff extends BaseController
         $roleModel = new RoleModel();
         $data['roles'] = $roleModel->findAll();
         
-        return view('admin/staff', $data);
+        // Layout variables
+        $data['title'] = 'Staff Management';
+        $data['page_title'] = 'Staff Management';
+        $data['page_subtitle'] = 'Manage users and access roles';
+        $data['active_menu'] = 'staff';
+        
+        return view('admin/staff_new', $data);
     }
 
     public function add()

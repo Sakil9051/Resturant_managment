@@ -26,6 +26,12 @@ class KDS extends BaseController
                                              ->findAll();
         }
         
+        // Layout variables
+        $data['title'] = 'Kitchen Display';
+        $data['page_title'] = 'Kitchen Display System';
+        $data['page_subtitle'] = 'Real-time order tracking for kitchen';
+        $data['active_menu'] = 'kds';
+        
         return view('admin/kds', $data);
     }
 

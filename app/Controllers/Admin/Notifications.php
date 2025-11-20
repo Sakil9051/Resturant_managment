@@ -13,6 +13,12 @@ class Notifications extends BaseController
         $data['notifications'] = $model->orderBy('created_at', 'DESC')->findAll();
         $data['unread_count'] = $model->getUnreadCount();
         
+        // Layout variables
+        $data['title'] = 'Notifications';
+        $data['page_title'] = 'Notifications';
+        $data['page_subtitle'] = 'Manage all system notifications';
+        $data['active_menu'] = 'notifications';
+        
         return view('admin/notifications', $data);
     }
 

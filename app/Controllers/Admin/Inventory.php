@@ -12,6 +12,13 @@ class Inventory extends BaseController
     {
         $model = new IngredientModel();
         $data['ingredients'] = $model->findAll();
+        
+        // Layout variables
+        $data['title'] = 'Inventory';
+        $data['page_title'] = 'Inventory Management';
+        $data['page_subtitle'] = 'Track and manage stock levels';
+        $data['active_menu'] = 'inventory';
+        
         return view('admin/inventory', $data);
     }
 

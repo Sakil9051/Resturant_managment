@@ -16,6 +16,12 @@ class BuffetController extends BaseController
         $bookingModel = new BuffetBookingModel();
         $data['bookings'] = $bookingModel->orderBy('date', 'ASC')->findAll();
         
+        // Layout variables
+        $data['title'] = 'Buffet Packages';
+        $data['page_title'] = 'Buffet Management';
+        $data['page_subtitle'] = 'Manage buffet packages and pricing';
+        $data['active_menu'] = 'buffet';
+        
         return view('admin/buffet', $data);
     }
 
