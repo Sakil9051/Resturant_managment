@@ -1,22 +1,15 @@
 /**
- * Enhanced Notification Manager with UI Components
- * Includes bell icon, badge counter, dropdown, and persistent storage
+ * Simple Notification Manager (No WebSocket)
+ * Loads notifications on page load and stores in localStorage
  */
 
 class NotificationManager {
     constructor() {
-        this.ws = null;
-        this.reconnectAttempts = 0;
-        this.maxReconnectAttempts = 5;
-        this.reconnectDelay = 3000;
-        this.subscriptions = new Set();
-        this.handlers = {};
         this.notifications = [];
         this.unreadCount = 0;
 
         this.initUI();
         this.loadNotifications();
-        this.connect();
     }
 
     initUI() {
@@ -79,8 +72,8 @@ class NotificationManager {
         });
     }
 
-    loadNotifications() {
-        // Load from localStorage
+    async loadNotifications() {
+        // Load from localStorage first for instant display
         const stored = localStorage.getItem('resto_notifications');
         if (stored) {
             this.notifications = JSON.parse(stored);
@@ -88,7 +81,7 @@ class NotificationManager {
         }
 
         // Fetch from server
-        this.fetchNotifications();
+        await this.fetchNotifications();
     }
 
     async fetchNotifications() {
@@ -104,42 +97,6 @@ class NotificationManager {
             }
         } catch (error) {
             console.error('Failed to fetch notifications:', error);
-        }
-    }
-
-    addNotification(notification) {
-        // Add to beginning of array
-        this.notifications.unshift({
-            id: Date.now(),
-            ...notification,
-            is_read: false,
-            created_at: new Date().toISOString()
-        });
-
-        // Keep only last 50 notifications in memory
-        if (this.notifications.length > 50) {
-            this.notifications = this.notifications.slice(0, 50);
-        }
-
-        this.unreadCount++;
-        this.updateUI();
-        this.saveToStorage();
-
-        // Save to server
-        this.saveToServer(notification);
-    }
-
-    async saveToServer(notification) {
-        try {
-            await fetch(`${baseUrl}admin/notifications/create`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(notification)
-            });
-        } catch (error) {
-            console.error('Failed to save notification:', error);
         }
     }
 
@@ -185,7 +142,7 @@ class NotificationManager {
         };
 
         const icon = icons[notification.type] || 'fa-bell text-gray-500';
-        const bgClass = notification.is_read ? 'bg-white' : 'bg-blue-50';
+        const bgClass = notification.is_read == 1 ? 'bg-white' : 'bg-blue-50';
 
         return `
             <div class="${bgClass} p-4 border-b border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
@@ -199,7 +156,7 @@ class NotificationManager {
                         <p class="text-sm text-gray-600 mt-1">${notification.message}</p>
                         <p class="text-xs text-gray-400 mt-1">${this.formatTime(notification.created_at)}</p>
                     </div>
-                    ${!notification.is_read ? '<div class="w-2 h-2 bg-blue-500 rounded-full"></div>' : ''}
+                    ${notification.is_read == 0 ? '<div class="w-2 h-2 bg-blue-500 rounded-full"></div>' : ''}
                 </div>
             </div>
         `;
@@ -221,9 +178,9 @@ class NotificationManager {
     }
 
     async markRead(id) {
-        const notification = this.notifications.find(n => n.id === id);
-        if (notification && !notification.is_read) {
-            notification.is_read = true;
+        const notification = this.notifications.find(n => n.id == id);
+        if (notification && notification.is_read == 0) {
+            notification.is_read = 1;
             this.unreadCount = Math.max(0, this.unreadCount - 1);
             this.updateUI();
             this.saveToStorage();
@@ -240,7 +197,7 @@ class NotificationManager {
     }
 
     async markAllRead() {
-        this.notifications.forEach(n => n.is_read = true);
+        this.notifications.forEach(n => n.is_read = 1);
         this.unreadCount = 0;
         this.updateUI();
         this.saveToStorage();
@@ -254,150 +211,9 @@ class NotificationManager {
         }
     }
 
-    // WebSocket methods (keeping existing functionality)
-    connect() {
-        try {
-            this.ws = new WebSocket('ws://localhost:8080');
-
-            this.ws.onopen = () => {
-                console.log('✅ Connected to notification server');
-                this.reconnectAttempts = 0;
-
-                this.subscriptions.forEach(channel => {
-                    this.subscribe(channel);
-                });
-            };
-
-            this.ws.onmessage = (event) => {
-                this.handleMessage(JSON.parse(event.data));
-            };
-
-            this.ws.onerror = (error) => {
-                console.error('WebSocket error:', error);
-            };
-
-            this.ws.onclose = () => {
-                console.log('❌ Disconnected from notification server');
-                this.attemptReconnect();
-            };
-        } catch (error) {
-            console.error('Failed to create WebSocket connection:', error);
-            this.attemptReconnect();
-        }
-    }
-
-    attemptReconnect() {
-        if (this.reconnectAttempts < this.maxReconnectAttempts) {
-            this.reconnectAttempts++;
-            console.log(`Reconnecting... (Attempt ${this.reconnectAttempts}/${this.maxReconnectAttempts})`);
-
-            setTimeout(() => {
-                this.connect();
-            }, this.reconnectDelay);
-        }
-    }
-
-    subscribe(channel) {
-        if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-            this.ws.send(JSON.stringify({
-                type: 'subscribe',
-                channel: channel
-            }));
-            this.subscriptions.add(channel);
-        }
-    }
-
-    on(event, handler) {
-        if (!this.handlers[event]) {
-            this.handlers[event] = [];
-        }
-        this.handlers[event].push(handler);
-    }
-
-    handleMessage(message) {
-        if (message.type === 'notification') {
-            this.handleNotification(message);
-        }
-    }
-
-    handleNotification(message) {
-        const { channel, data } = message;
-
-        // Add to notifications list
-        this.addNotification({
-            type: data.event,
-            title: this.getNotificationTitle(data.event),
-            message: this.getNotificationMessage(data),
-            data: JSON.stringify(data)
-        });
-
-        // Trigger registered handlers
-        const eventKey = `${channel}:${data.event}`;
-        if (this.handlers[eventKey]) {
-            this.handlers[eventKey].forEach(handler => handler(data));
-        }
-
-        // Show toast
-        this.showToast(this.getNotificationMessage(data), 'info');
-    }
-
-    getNotificationTitle(event) {
-        const titles = {
-            'new_order': '🛒 New Order',
-            'order_status_changed': '📦 Order Updated',
-            'new_reservation': '📅 New Reservation',
-            'low_stock': '⚠️ Low Stock Alert',
-            'kds_update': '🔥 Kitchen Update'
-        };
-        return titles[event] || 'Notification';
-    }
-
-    getNotificationMessage(data) {
-        switch (data.event) {
-            case 'new_order':
-                return `Order #${data.order_id} received`;
-            case 'order_status_changed':
-                return `Order #${data.order_id} is now ${data.status}`;
-            case 'new_reservation':
-                return `Reservation #${data.reservation_id} created`;
-            case 'low_stock':
-                return `${data.item_name} is running low (${data.quantity} left)`;
-            case 'kds_update':
-                return `Order #${data.order_id} - ${data.action}`;
-            default:
-                return 'New notification';
-        }
-    }
-
-    showToast(message, type = 'info') {
-        const colors = {
-            success: 'bg-green-500',
-            error: 'bg-red-500',
-            warning: 'bg-orange-500',
-            info: 'bg-blue-500'
-        };
-
-        const toast = document.createElement('div');
-        toast.className = `fixed top-20 right-4 ${colors[type]} text-white px-6 py-4 rounded-lg shadow-2xl transform transition-all duration-300 translate-x-full z-50 max-w-sm`;
-        toast.style.animation = 'slideIn 0.3s forwards';
-
-        toast.innerHTML = `
-            <div class="flex items-start space-x-3">
-                <div class="flex-1">
-                    <p class="text-sm">${message}</p>
-                </div>
-                <button onclick="this.parentElement.parentElement.remove()" class="text-white hover:text-gray-200">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-        `;
-
-        document.body.appendChild(toast);
-
-        setTimeout(() => {
-            toast.style.animation = 'slideOut 0.3s forwards';
-            setTimeout(() => toast.remove(), 300);
-        }, 5000);
+    // Refresh notifications (call this periodically if needed)
+    async refresh() {
+        await this.fetchNotifications();
     }
 }
 
@@ -418,3 +234,8 @@ document.head.appendChild(style);
 // Initialize
 const baseUrl = window.location.origin + '/resturant_managment/public/';
 const notificationManager = new NotificationManager();
+
+// Optional: Refresh notifications every 30 seconds
+setInterval(() => {
+    notificationManager.refresh();
+}, 30000);
